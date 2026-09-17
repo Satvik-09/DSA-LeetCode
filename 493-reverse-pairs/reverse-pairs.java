@@ -1,50 +1,44 @@
 class Solution {
-    int count = 0;
-    private void mergesort(int[] nums,int low,int high){
-        if(low>=high) return;
-        int mid = (high + low)/2;
-        mergesort(nums,low,mid);
-        mergesort(nums,mid+1,high);
-        cntpairs(nums,low,mid,high);
-        merge(nums,low,mid,high);
-    }
+        private long mergesort(int[] nums, int start, int end){
+            long count = 0;
+            if(start>=end) return count;
+            int mid =  start + (end - start)/2;
+           count += mergesort(nums,start,mid);
+           count += mergesort(nums,mid+1,end);
+           count += countpairs(nums,start,mid,end);
+           merge(nums,start,mid,end);
+           return count;
+        }
+           private long countpairs(int[] nums, int low, int mid, int high){
+           int j = mid+1; long count = 0;
+            for(int i = low; i<mid+1;i++){
+            while(j <= high && nums[i] > 2L*nums[j]){
+                   j++; }
+                    count += (j-(mid+1));
+            }
+            return count;
+           }
 
-    private void merge(int[] nums, int low, int mid, int high){
-       List<Integer> temp = new ArrayList<>();
-        int left = low; int right = mid+1;
-        while(left<=mid && right <= high){
-            if(nums[left] < nums[right]){
-                temp.add(nums[left]);
-                left++;
+           private void merge(int[] nums, int low, int mid, int high){
+            List<Integer> temp = new ArrayList<>();
+            int i = low; int j = mid + 1;
+            while(i<=mid && j<=high){
+                if(nums[i] < nums[j]){
+                    temp.add(nums[i++]);
+                }
+                else{
+                    temp.add(nums[j++]);
+                }
             }
-            else {
-                temp.add(nums[right]);
-                right++;
+            while(i<=mid){ temp.add(nums[i++]);}
+            while(j<=high){ temp.add(nums[j++]);}
+
+            for(int k = low; k<=high; k++){
+                nums[k] = temp.get(k-low);
             }
-        }
-        //first half 0 to mid
-       while(left<=mid) temp.add(nums[left++]);
-       // adding remaining half which are remained
-       while(right<=high) temp.add(nums[right++]);
-         //adding all from 0 to high
-        for(int i = low; i<=high; i++){
-            nums[i] = temp.get(i-low);
-        }
-    }
-      private void cntpairs(int[] nums, int low, int mid, int high){
-        int right = mid+1; 
-         for(int left = low; left<mid+1; left++){
-            while(right<=high && nums[left] > 2L*nums[right]){
-                right++;
-            }
-            count += (right - (mid+1));
-         }
-      }
+           }
 
     public int reversePairs(int[] nums) {
-        int n = nums.length;
-        count = 0;
-        mergesort(nums,0,n-1);
-        return count;
+        return (int) mergesort(nums,0,nums.length-1);
     }
 }
