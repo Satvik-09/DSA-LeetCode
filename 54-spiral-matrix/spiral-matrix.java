@@ -20,13 +20,13 @@ class Solution {
             for(int col = right; col>=left; col--){
                 cur.add(matrix[bottom][col]);
             }
-            bottom--;
+            bottom--; // once reached col < 0 moves upward by 1
 
             if(left<=right){
                 for(int row = bottom; row >= top; row--){
                     cur.add(matrix[row][left]);
                 }
-                left++;
+                left++; // once reached top end or existed element moves left by
             } 
           }
       }
